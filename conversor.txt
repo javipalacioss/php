@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Conversión de Moneda</title>
+</head>
+
+<body>
+
+    <!-- Título H1 -->
+    <h1>Conversor de monedas.</h1>
+
+    <?php
+    // Define las constantes, redondeado a 3 decimales
+    define("EurPta", 166.386);
+    define("PtaEur", number_format(1 / 166.386, 3));
+
+    // Muestra los valores de las constantes
+    echo 'Valor de la constante "EurPta": ' . EurPta . '<br>';
+    echo 'Valor de la constante "PtaEur": ' . PtaEur . '<br>';
+    ?>
+
+    <!-- Action es vacío ya que se envía a la propia página. -->
+    <form method="post" action="">
+    
+
+
+        <!-- Etiqueta y campo input -->
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" name="cantidad" id="cantidad" >
+        <br>
+
+        <!-- Radiobutton -->
+        <input type="radio" name="tipoConversion" value="eurosToPesetas" checked> Convertir a Pesetas
+        <input type="radio" name="tipoConversion" value="pesetasToEuros"> Convertir a Euros
+        <br>
+        <input type="submit" name="Convertir" value="Convertir">
+
+    </form>
+
+    <?php
+
+    /*
+        OPCION 1:   VERIFICANDO SI EL MÉTODO POR EL QUE ACCEDEMOS ES POST
+                    La primera vez, no será post, y por tanto, no intentará hacer la lógica.
+                    Si se intenta hacer la primera vez, lee campos a 0 y falla.
+    */
+    /*
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Leemos las variables de los input
+        $cantidad = intval($_POST["cantidad"]);
+        $tipoConversion = $_POST["tipoConversion"];
+
+        if (!empty($cantidad)) {
+            if ($tipoConversion == "eurosToPesetas") {
+                $resultado = $cantidad * EurPta;
+                // Representación españa miles y decimales.
+                $resultado = number_format($resultado, 2, ',', '.');
+                echo '<br>' . $cantidad . ' euros son ' . $resultado . ' pesetas.';
+            } elseif ($tipoConversion == "pesetasToEuros") {
+                $resultado = $cantidad * PtaEur;
+                // Representación españa miles y decimales.
+                $resultado = number_format($resultado, 2, ',', '.');
+                echo '<br>' . $cantidad . ' pesetas son ' . $resultado . ' euros.';
+            }
+        } else {
+            echo "<br>Si la cantidad es 0, no hay conversión posible.<br>Debes introducir un valor de monedas.";
+        }
+    }
+    */
+
+    /*
+    OPCION 2:   VERIFICANDO QUE LOS CAMPOS QUE NOS INTERESAN ESTÁN INICIALIZADOS
+                Comprobamos si han inicializado la cantidad de moneda, ya que no podemos convertir "vacío".
+                También comprobamos si han pulsado el botón "conversion".
+    */
+    
+    if (isset($_POST["Convertir"])) {
+
+        // Leemos las variables de los input
+        $cantidad = intval($_POST["cantidad"]);
+        $conversion = $_POST["tipoConversion"];
+
+        if (!empty($cantidad) and isset($conversion)) {
+
+            if ($conversion == "eurosToPesetas") {
+                $resultado = $cantidad * EurPta;
+                // Representación españa miles y decimales.
+                $resultado = number_format($resultado, 2, ',', '.');
+                echo '<br>' . $cantidad . ' Euros son ' . $resultado . ' pesetas.';
+            } elseif ($conversion == "pesetasToEuros") {
+                $resultado = $cantidad * PtaEur;
+                // Representación españa miles y decimales.
+                $resultado = number_format($resultado, 2, ',', '.');
+                echo '<br>' . $cantidad . ' Pesetas son ' . $resultado . ' euros.';
+            }
+        } else {
+            echo "<br>Si la cantidad es 0, no hay conversión posible.<br>Debes introducir un valor de monedas.";
+        }
+    }
+    
+    ?>
+
+
+
+</body>
+
+</html>
