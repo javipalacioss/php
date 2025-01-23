@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cerrarSesion'])) {
     <?php
     // Mostrar el nombre de la sesión si está disponible
     if (!empty($nombre)) {
-        echo "<p>La sesion se llama: " . $nombre . "</p>";
+        echo "<p>La sesion se llama: " . $nombre . "</p>"; 
     }
     ?>
 
