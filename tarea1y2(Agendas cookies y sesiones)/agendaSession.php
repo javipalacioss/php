@@ -92,3 +92,4 @@ if (isset($_POST['leer'])) { //verificamos que hemos pulsado el boton leer
 
 <!--si guardo un nombre vacio el programalo guarda, pedir solucion al profesor
  una posible solucion podria ser required en el input nombre, pero no es asi por que si le doy a leer no me deja ya que me pide el nombre que seria required-->
+ 
