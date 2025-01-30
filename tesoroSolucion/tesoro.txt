@@ -1,0 +1,1 @@
+a:2:{i:0;a:3:{s:11:"descripcion";s:7:"3333333";s:5:"valor";s:3:"213";s:11:"procedencia";s:7:"españa";}i:1;a:3:{s:11:"descripcion";s:16:"rodrigo robo oro";s:5:"valor";s:4:"1234";s:11:"procedencia";s:4:"peru";}}
