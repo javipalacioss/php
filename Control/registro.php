@@ -27,7 +27,6 @@ $username = 'root';
 $password = '';
 
 
-// completar con foto del movil
 try {
     $conexion = new PDO("mysql:host=$host; dbname=$dbname", $username, $password);
     $conexion -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); //Establecer mi 
@@ -74,7 +73,6 @@ VALUES(:dni, :nombre, :telefono, :email, :ciudad, :clave, :rol)";
     } else {
         echo "Error al añadir cliente";
     }
-
     header('Location: index.php');
     exit();
 }

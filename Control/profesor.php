@@ -3,39 +3,67 @@ require_once('clases.php');
 
 session_start();
 
+// Verificar si el usuario está logueado
 if (!isset($_SESSION['usuario'])) {
     header('Location: index.php');
     exit;
 }
 
+// Conexión a la base de datos
+$host = 'localhost';
+$dbname = 'instituto';
+$username = 'root';
+$password = '';
+
+try {
+    // Crear la conexión
+    $conexion = new PDO("mysql:host=$host; dbname=$dbname", $username, $password);
+    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Manejo de errores
+} catch (PDOException $e) {
+    echo "Error de conexión: " . $e->getMessage();
+    exit();
+}
+
+// Obtener el usuario de la sesión
+$usuario = $_SESSION['usuario'];
+
+// Verificar si el formulario de asignación de nota fue enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    if(isset($_POST['asignar']))
-    {
+    // Asignar una nueva nota a un alumno
+    if (isset($_POST['asignar'])) {
 
+        $nombreAlumno = $_POST['nombreAlumno'];
+        $asignatura = $_POST['asignatura'];
+        $nota = $_POST['nota'];
 
-    $nombreAlumno = $_POST['nombreAlumno'];
-    $asignatura = $_POST['asignatura'];
-    $nota = $_POST['nota'];
+        // Buscar al alumno en la base de datos
+        $sql = "SELECT id FROM usuarios WHERE nombre = :nombreAlumno AND rol = 'a'";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':nombreAlumno', $nombreAlumno);
+        $stmt->execute();
 
-    // Cargamos los usuarios y asignamos la nota al alumno correspondiente
-    $usuarios = unserialize(file_get_contents('usuarios.txt'));
-    foreach ($usuarios as $usuario) {
-        if ($usuario instanceof Alumno && $usuario->getNombre() == $nombreAlumno) {
-            $usuario->asignarNota($asignatura, $nota);
-            break;
+        if ($stmt->rowCount() > 0) {
+            // El alumno existe, asignamos la nota
+            $alumno = $stmt->fetch(PDO::FETCH_ASSOC);
+            $idAlumno = $alumno['id'];
+
+            // Insertar la nota en la tabla "notas"
+            $sql = "INSERT INTO notas (id_usuario, asignatura, nota) VALUES (:id_usuario, :asignatura, :nota)";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':id_usuario', $idAlumno);
+            $stmt->bindParam(':asignatura', $asignatura);
+            $stmt->bindParam(':nota', $nota);
+            $stmt->execute();
+
+            echo "Nota asignada correctamente.";
+        } else {
+            echo "Alumno no encontrado.";
         }
     }
 
-    // Guardamos los cambios
-    file_put_contents('usuarios.txt', serialize($usuarios));
-    echo "Nota asignada correctamente.";
-
-    }
-
-
-    if(isset($_POST['cerrar']))
-    {
+    // Cerrar sesión
+    if (isset($_POST['cerrar'])) {
         session_unset();
         session_destroy();
         header('Location: index.php');
@@ -59,11 +87,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="text" name="asignatura" required><br>
         <label for="nota">Nota:</label>
         <input type="number" name="nota" min="0" max="10" required><br>
-        <button type="submit"name="asignar">Asignar nota</button>
+        <button type="submit" name="asignar">Asignar nota</button>
     </form>
 
     <form action="profesor.php" method="POST">
-        <button type="submit" name="cerrar" >Cerrar</button>
+        <button type="submit" name="cerrar">Cerrar</button>
     </form>
 </body>
 </html>
