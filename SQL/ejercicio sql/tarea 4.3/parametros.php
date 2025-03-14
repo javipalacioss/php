@@ -1,7 +1,7 @@
 <?php
     // Declaración de parámetos de conexión. Son constantes.
-    define('HOST',      '');
-    define('DBNAME',    '');
-    define('USERNAME',  '');
+    define('HOST',      'loaclhost');
+    define('DBNAME',    'recetas');
+    define('USERNAME',  'root');
     define('PASSWORD',  '');
 ?>
